@@ -1,0 +1,2 @@
+starg(b).
+starg(a).

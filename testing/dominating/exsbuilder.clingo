@@ -1,0 +1,40 @@
+
+
+
+
+pos(0..n-1).
+dompos(n..2*n-1).
+
+neg(2*n..3*n-1).
+domneg(3*n..4*n-1).
+
+graph(X):- pos(X).
+graph(X):- neg(X).
+
+domset(X,Y):- graph(X),Y=X+n.
+
+node(G,1..m):- graph(G).
+{edge(G,X,Y)}:-graph(G),node(G,X),node(G,Y), X!=Y.
+{member(GD,X)}:- domset(G,GD), node(G,X).
+
+%:-graph(G), m>#count{X,Y: edge(G,X,Y)}.
+
+ispos(G):- pos(G), domset(G,GD),
+#count{Y: node(G,Y)}=C0,
+#count{Y:  member(GD,Y)}=C1,
+#count{Y: not member(GD,Y),member(GD,X), edge(G,X,Y)}=C2,
+C1+C2 =C0.
+
+%:- domset(G,GD),edge(G,X,Y), edge(G,Z,Y), X!= Z, member(GD,X), member(GD,Z).
+:- edge(G,X,Y), not edge(G,Y,X).
+%:- domset(G,GD), member(GD,X),  #count{Y: node(G,Y),not member(GD,Y), edge(G,X,Y)} = 0.
+
+:-  pos(G), not ispos(G).
+:-  neg(X),ispos(X).
+
+
+:- pos(X), domset(X,Y) , #count{Z:  member(Y,Z)} !=X+3.
+:-  neg(X), domset(X,Y) ,  #count{Z:  member(Y,Z)} !=R+3 ,R=X-2*n.
+#show node/2.
+#show edge/3.
+#show member/2.

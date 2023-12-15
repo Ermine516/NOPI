@@ -1,0 +1,45 @@
+%sometimes negatives are actually positives.
+%no clue why. Should test in prolog.
+
+pos(0..n-1).
+neg(n..2*n-1).
+
+graph(X):- pos(X).
+graph(X):- neg(X).
+
+
+node(G,1..m):- graph(G).
+{edge(G,X,Y)}:-graph(G),node(G,X),node(G,Y), X!=Y.
+% bidirectional edges
+:- edge(G1,X,Y),not edge(G1,Y,X).
+% all graphs are the same
+:- edge(G1,X,Y),graph(G2),not edge(G2,X,Y).
+% all nodes have a single colour
+1{red(G,X);green(G,X)}1:- node(G,X).
+%Must have n edges or more
+:-graph(G), m>#count{X,Y: edge(G,X,Y)}.
+% must have a red to red edge
+:- graph(G1),#count{X,Y: edge(G1,X,Y), red(G1,X),red(G1,Y)} =0.
+% must have a green to red edge
+:- graph(G1),#count{X,Y: edge(G1,X,Y), red(G1,X),green(G1,Y)} =0.
+% must have a green to red edge
+:- graph(G1),#count{X,Y: edge(G1,X,Y), green(G1,X),green(G1,Y)} =0.
+
+% must have a green to red edge
+:- graph(G1),#count{X,Y: edge(G1,X,Y), red(G1,X),green(G1,Y)} =0.
+
+reds(G,X):- graph(G), #count{Y: red(G,Y)} =X.
+ispos(G):- graph(G), #count{X: red(G,X),green(G,Y),edge(G,X,Y) }=C1,reds(G,C2) , C1=C2.
+ispos(G):- graph(G),#count{X: red(G,X),green(G,Y),edge(G,Y,X) }=C1 , reds(G,C2), C1=C2.
+
+%every red node must have an edge to a green one
+:- pos(G), not ispos(G).
+
+%The number of red nodes with edges to green nodes cannot be every red node
+:- neg(G), ispos(G).
+
+
+#show node/2.
+#show edge/3.
+#show red/2.
+#show green/2.

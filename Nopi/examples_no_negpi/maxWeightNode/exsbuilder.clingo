@@ -1,0 +1,23 @@
+
+
+pos(a).
+pos(b).
+neg(c).
+neg(d).
+
+graph(X):- pos(X).
+graph(X):- neg(X).
+
+node(G,1..n):- graph(G).
+{edge(G,X,Y)}:-graph(G),node(G,X),node(G,Y), X!=Y.
+1{weight(G,X,1..n)}1:- graph(G),node(G,X).
+
+:- edge(A,C,B), not edge(A,B,C).
+
+:-graph(G), n>#count{X,Y: edge(G,X,Y)}.
+
+
+
+#show node/2.
+#show edge/3.
+#show weight/3.

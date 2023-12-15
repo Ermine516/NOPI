@@ -1,0 +1,45 @@
+
+
+pos(0..n-1).
+subpos(n..2*n-1).
+
+neg(2*n..3*n-1).
+subneg(3*n..4*n-1).
+
+graph(X):- pos(X).
+graph(X):- neg(X).
+
+subgraph(X,Y):- graph(X),Y=X+n.
+
+node(G,1..m):- graph(G).
+{node(G,1..m)}:- subgraph(_,G).
+{edge(G,X,Y)}:-graph(G),node(G,X),node(G,Y), X!=Y.
+{edge(G,X,Y)}:-subgraph(_,G),node(G,X),node(G,Y), X!=Y.
+
+
+:-graph(G), m>#count{X,Y: edge(G,X,Y)}.
+:- subgraph(G,GP),#count{X,Y: edge(GP,X,Y)} =0.
+
+:- subgraph(G,GP),C2>C1,
+   #count{X,Y: edge(G,X,Y)}=C1,
+   #count{X,Y: edge(GP,X,Y)}=C2.
+
+:- subgraph(G,GP),C2>C1,
+   #count{X: node(G,X)}=C1,
+   #count{X: node(GP,X)}=C2.
+
+:-pos(W),subgraph(W,R), not edge(W,X,Y),edge(R,X,Y).
+:-pos(W),subgraph(W,R), #count{X: node(R,X)}=m.
+:-pos(W),subgraph(W,R), #count{X,Y: edge(R,X,Y)}=C1,
+   #count{X,Y: edge(W,X,Y)} = C2,
+   C2=C1.
+
+
+:-neg(W),subgraph(W,R), #count{X,Y: not edge(W,X,Y),edge(R,X,Y)}=0.
+:- neg(W),subgraph(W,R), #count{X: node(R,X)}=m.
+
+
+
+
+#show node/2.
+#show edge/3.

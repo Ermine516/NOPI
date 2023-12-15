@@ -1,0 +1,46 @@
+
+
+pos(a).
+pos(b).
+pos(c).
+pos(d).
+neg(e).
+neg(f).
+neg(g).
+neg(h).
+graph(X):- pos(X).
+graph(X):- neg(X).
+
+inden(a,da).
+inden(b,db).
+inden(c,dc).
+inden(d,dd).
+inden(e,de).
+inden(f,df).
+inden(g,dg).
+inden(h,dh).
+
+
+node(G,1..n):- graph(G).
+{edge(G,X,Y)}:-graph(G),node(G,X),node(G,Y), X!=Y.
+{member(GD,X)}:- inden(G,GD), node(G,X).
+:- edge(G,X,Y), not edge(G,X,Y).
+
+:-graph(G), m*n>#count{X,Y: edge(G,X,Y)}.
+
+independent(GD):- inden(G,GD), #count{X,Y: member(GD,X),member(GD,Y), X!= Y,edge(G,X,Y)}=0.
+:- inden(_,GD),#count{X:  member(GD,X)}<4.
+dependent(G,X):- inden(G,GD),
+                 member(GD,X),
+                 member(GD,Y),
+                 edge(G,X,Y).
+
+:- neg(X), #count{Y: node(X,Y),not dependent(X,Y)}=0.
+:-    not independent(Y),pos(X), inden(X,Y).
+:-    independent(Y), neg(X) ,inden(X,Y).
+
+
+
+#show node/2.
+#show edge/3.
+#show member/2.

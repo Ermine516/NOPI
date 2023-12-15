@@ -1,0 +1,26 @@
+
+
+pos(0..n-1).
+neg(n..2*n-1).
+
+graph(X):- pos(X).
+graph(X):- neg(X).
+
+node(G,1..m):- graph(G).
+{edge(G,X,Y)}:-graph(G),node(G,X),node(G,Y), X!=Y.
+1{weight(G,X,1..m)}1:- graph(G),node(G,X).
+
+:- edge(A,C,B), not edge(A,B,C).
+
+:-graph(G), m>#count{X,Y: edge(G,X,Y)}.
+
+max(G,X):- node(G,X), #max{W: node(G,Y),weight(G,Y,W)} = WW,  weight(G,X,WW).
+
+other(G,X):-node(G,X), #max{W: node(G,Y), weight(G,Y,W)} = WW,  not weight(G,X,WW).
+
+:- neg(G), #count{X:other(G,X)} = 0.
+#show node/2.
+#show edge/3.
+#show weight/3.
+#show max/2.
+#show other/2.

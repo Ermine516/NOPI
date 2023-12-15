@@ -1,0 +1,14 @@
+pos(one_even(1,2)).
+pos(one_even(1,4)).
+pos(one_even(2,3)).
+pos(one_even(2,5)).
+pos(one_even(3,2)).
+pos(one_even(3,4)).
+pos(one_even(3,18)).
+neg(one_even(1,1)).
+neg(one_even(1,3)).
+neg(one_even(1,5)).
+neg(one_even(2,2)).
+neg(one_even(2,4)).
+neg(one_even(4,8)).
+neg(one_even(3,7)).

@@ -1,0 +1,54 @@
+
+
+
+pos(0..n-1).
+posinden(n,2*n-1).
+neg(2*n..3*n-1).
+neginden(3*n,4*n-1).
+
+graph(X):- pos(X).
+graph(X):- neg(X).
+
+inden(X,Y):- pos(X),Y=X+n.
+inden(X,Y):- neg(X),Y=X+n.
+
+
+node(G,1..k):- graph(G).
+{edge(G,X,Y)}:-graph(G),node(G,X),node(G,Y), X!=Y.
+{member(GD,X)}:- inden(G,GD), node(G,X).
+:- edge(G,X,Y), not edge(G,X,Y).
+
+:-graph(G), m*k>#count{X,Y: edge(G,X,Y)}.
+independent(GD):- inden(G,GD),
+                  #count{X,Y: member(GD,X),member(GD,Y), X!= Y,edge(G,X,Y)}=0.
+
+dependent(G,X):- inden(G,GD),
+                not member(GD,X),
+                member(GD,Y),
+                edge(G,X,Y).
+free(G,X):- inden(G,GD),
+            node(G,X),
+            not member(GD,X).
+isolated(G,X):-graph(G),
+               node(G,X),
+               #count{Y: node(G,Y), edge(G,X,Y)}=0,
+               #count{Y: node(G,Y), edge(G,Y,X)}=0.
+
+max_independent(GD):-inden(G,GD),
+                      #count{X: dependent(G,X)}=C1,
+                      #count{X: free(G,X)}= C2, C1=C2.
+
+:- inden(_,GD),#count{X:  member(GD,X)}<4.
+
+:- graph(G), #count{X: isolated(G,X)}!=1.
+
+:-  independent(Y), graph(X),inden(X,Y).
+
+:-     not max_independent(Y), pos(X) ,inden(X,Y).
+:-     max_independent(Y),neg(X) ,inden(X,Y).
+
+
+
+#show node/2.
+#show edge/3.
+#show member/2.

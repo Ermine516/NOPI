@@ -1,0 +1,23 @@
+
+
+graph(a).
+graph(b).
+graph(c).
+graph(d).
+node(G,1..n):- graph(G).
+{edge(G,X,Y)}:-graph(G),node(G,X),node(G,Y), X!=Y.
+
+
+star(G,X):- graph(G), node(G,X),not edge(G,X,X), #count{Y: edge(G,X,Y)} = Z, Z=n-1. 
+
+:-graph(G),n>#count{X,Y: edge(G,X,Y)} .
+
+:- #count{X:star(a,X)} !=1.
+:-  #count{X:star(b,X)} !=1.
+:- star(a,X),star(b,X).
+:- #count{X:star(c,X)} !=0.
+:-  #count{X:star(d,X)} !=0.
+
+#show node/2.
+#show edge/3.
+

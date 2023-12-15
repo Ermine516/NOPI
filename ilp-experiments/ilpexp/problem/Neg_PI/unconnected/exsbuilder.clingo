@@ -1,0 +1,78 @@
+
+
+node(1..n).
+{edge(X,Y)}:-node(X),node(Y), X!=Y.
+connect(A,B):-edge(A,B).
+connect(A,B):-edge(A,C),connect(C,B).
+
+unconnected(X,Y):- node(X),node(Y),X!=Y,not connect(X,Y).
+connected(X,Y):- node(X),node(Y),X!=Y ,connect(X,Y).
+
+:- unconnected(X,Y), connected(Y,X).
+
+:- #count{X,Y: unconnected(X,Y)}<2.
+
+
+:-  #count{X,Y: connected(X,Y),prog1(X,Y)}=0.
+:-  #count{X,Y: connected(X,Y),prog2(X,Y)}=0.
+:-  #count{X,Y: connected(X,Y),prog3(X,Y)}=0.
+:-  #count{X,Y: connected(X,Y),prog4(X,Y)}=0.
+:-  #count{X,Y: connected(X,Y), prog6(X,Y)}=0.
+:-  #count{X,Y: unconnected(X,Y),not prog5(X,Y)}=0.
+:-  #count{X,Y: connected(X,Y), prog7(X,Y)}=0.
+:-  #count{X,Y: connected(X,Y), prog8(X,Y)}=0.
+:-  #count{X,Y: connected(X,Y), prog9(X,Y)}=0.
+:-  #count{X,Y: connected(X,Y), prog10(X,Y)}=0.
+:-  #count{X,Y: connected(X,Y), prog11(X,Y)}=0.
+:-  #count{X,Y: connected(X,Y), prog12(X,Y)}=0.
+
+
+
+prog1(A,B):- node(A),node(B), not prog1inv1(B,A).
+prog1inv1(A,B):- edge(B,C),edge(C,A).
+
+prog2(A,B):-node(A),node(B), not edge(A,B).
+
+prog3(A,B):- node(A),edge(B,C),not prog3inv1(C,A).
+prog3inv1(A,B):- edge(B,C),edge(C,A).
+
+prog4(A,B):- node(A),node(B),not prog4inv1(B,A).
+prog4inv1(A,B):- edge(B,C),edge(A,C).
+
+prog5(A,B):-node(A),node(B),not prog5inv1(B),not prog5inv1(A).
+prog5inv1(A):- node(B),edge(B,A).
+
+prog6inv1(A,B):- edge(A,B).
+prog6(A,B):- node(A),node(B),not prog6inv1(A,B).
+prog6inv1(A,B):- edge(A,C),edge(C,B).
+
+prog7(A,B):-  node(A),node(B),not prog7inv1(A,B).
+prog7inv1(A,B):- edge(B,A).
+prog7inv1(A,B):- edge(A,B).
+
+prog8inv1(A,B):- edge(A,B).
+prog8(A,B):- node(A),node(B),not prog8inv1(A,B).
+prog8inv1(A,B):- edge(B,C),edge(C,A).
+
+prog9inv1(A,B):- edge(B,A).
+prog9(A,B):- node(A),node(B),not prog9inv1(A,B).
+prog9inv1(A,B):- edge(B,C),edge(A,C).
+
+prog10(A,B):- node(A),node(B),not prog10inv1(B,A),not prog10inv1(A,B).
+prog10(A,B):- edge(B,C),edge(C,A).
+
+prog11inv1(A,B):- edge(B,C),edge(C,A).
+prog11(A,B):- node(A),node(B),not  prog11inv1(B,A),not prog11inv1(A,B).
+
+prog12inv1(A,B):- edge(B,C),edge(A,C).
+prog12(A,B):- node(A),node(B),not  prog12inv1(B,A),not prog12inv1(A,B).
+
+
+#show node/1.
+#show edge/2.
+#show unconnected/2.
+#show connected/2.
+
+ecount(Z):- #count{X,Y: edge(X,Y)}=Z.
+
+#maximize { X: ecount(X) }.

@@ -1,0 +1,24 @@
+
+
+pos(0..m).
+neg(m+1..2*m).
+
+graph(X):- pos(X).
+graph(X):- neg(X).
+
+node(G,1..n):- graph(G).
+{edge(G,X,Y)}:-graph(G),node(G,X),node(G,Y), X!=Y.
+
+
+star(G,X):- graph(G), node(G,X),not edge(G,X,X), #count{Y: edge(G,X,Y)} = Z, Z=n-1. 
+
+:-graph(G),n>#count{X,Y: edge(G,X,Y)} .
+
+:- pos(Y), #count{X:star(Y,X)} !=1.
+:- pos(Y),pos(Z),Y!= Z, star(Y,X),star(Z,X).
+:-neg(Y), #count{X:star(Y,X)} !=0.
+
+
+#show node/2.
+#show edge/3.
+

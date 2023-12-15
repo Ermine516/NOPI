@@ -1,0 +1,50 @@
+
+
+graph(a).
+graph(b).
+graph(c).
+graph(d).
+subgraph(a,ap).
+subgraph(b,bp).
+subgraph(c,cp).
+subgraph(d,dp).
+node(G,1..n):- graph(G).
+{node(G,1..n)}:- subgraph(_,G).
+{edge(G,X,Y)}:-graph(G),node(G,X),node(G,Y), X!=Y.
+{edge(G,X,Y)}:-subgraph(_,G),node(G,X),node(G,Y), X!=Y.
+
+
+:-graph(G), n>#count{X,Y: edge(G,X,Y)}.
+:- subgraph(G,GP),#count{X,Y: edge(GP,X,Y)} =0.
+
+:- subgraph(G,GP),C2>C1,
+   #count{X,Y: edge(G,X,Y)}=C1,
+   #count{X,Y: edge(GP,X,Y)}=C2.
+
+:- subgraph(G,GP),C2>C1,
+   #count{X: node(G,X)}=C1,
+   #count{X: node(GP,X)}=C2.
+
+:- not edge(a,X,Y),edge(ap,X,Y).
+:- #count{X: node(ap,X)}=n.
+:- #count{X,Y: edge(ap,X,Y)}=C1,
+   #count{X,Y: edge(a,X,Y)} = C2,
+   C2=C1.
+
+:- not edge(b,X,Y),edge(bp,X,Y).
+:- #count{X: node(bp,X)}=n.
+:- #count{X,Y: edge(bp,X,Y)}=C1,
+   #count{X,Y: edge(b,X,Y)} = C2,
+   C2=C1.
+
+% cp has an extra edge
+:- #count{X,Y: not edge(c,X,Y),edge(cp,X,Y)}=0.
+:-  #count{X: node(cp,X)}=n.
+
+% dp has n nodes.
+:-  #count{X: node(dp,X)}!=n.
+:- #count{X,Y: not edge(d,X,Y),edge(dp,X,Y)}!=0.
+
+
+#show node/2.
+#show edge/3.

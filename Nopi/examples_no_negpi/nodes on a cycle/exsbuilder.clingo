@@ -1,0 +1,39 @@
+
+
+pos(1..n).
+neg(n+1..2*n).
+
+graph(X):- pos(X).
+graph(X):- neg(X).
+
+node(X,1..m):- graph(X).
+{edge(G,X,Y)}:-graph(G), node(G,X),node(G,Y), X!=Y.
+:- edge(G,X,Y),edge(G,Y,X).
+
+3{cycset(G,Y):node(G,Y) }m:- graph(G).
+
+cyccount(G,X):- graph(G), #count{Y: cycset(G,Y)}= X, X=1..m.
+
+1{cycset2(G,Y,1..R)}1:-  cycset(G,Y), cyccount(G,R).
+
+:- cycset2(G,Y,R1), cycset2(G,Y,R2), R1!= R2.
+:- cycset2(G,Y,R1), cycset2(G,Z,R1), Y!= Z.
+
+isneg(G) :- graph(G),
+            #count{R1: cycset2(G,Y,R1),R2=R1+1, cycset2(G,Z,R2), edge(G,Y,Z)} =R3,
+            cyccount(G,R), R3= R-1,cycset2(G,Y2,1),cycset2(G,Z2,R),edge(G,Z2,Y2).
+ispos(G) :- graph(G),
+            #count{R1: cycset2(G,Y,R1),R2=R1+1, cycset2(G,Z,R2), edge(G,Y,Z)} =R3,
+            cyccount(G,R), R3= R-1,cycset2(G,Y2,1),cycset2(G,Z2,R),not edge(G,Z2,Y2).
+
+:- pos(G),not ispos(G).
+
+:- neg(G),not isneg(G).
+
+
+:- X=4..m, #count{G: neg(G),cyccount(G,X)} =0.
+:- X=4..m, #count{G: pos(G),cyccount(G,X)} =0.
+
+#show node/2.
+#show edge/3.
+#show cycset2/3.
